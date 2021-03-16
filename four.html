@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Canvas画线</title>
+        <link rel="stylesheet" href="two.css">
+    </head>
+    <body>
+        <canvas id="canvas" width="100" height="100"></canvas>
+        <script>
+            let canvas = document.getElementById("canvas");  //先定义和获取canvas
+            canvas.width = document.documentElement.clientWidth;  //canvas的宽等于屏幕宽
+            canvas.height = document.documentElement.clientHeight; //canvas的高等于屏幕高
+
+            let ctx = canvas.getContext("2d");
+            ctx.strokeStyle = "red";   //canvas的颜色样式
+            ctx.lineWidth =6;
+            ctx.lineCap = "round";
+            let painting = false;    //定义pc上鼠标的变量
+
+            let last
+            function drawLine(x1, y1, x2, y2) {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+
+            let isTouchDevice = 'ontouchstart' in document.documentElement;
+            if (isTouchDevice) {
+                canvas.ontouchstart = (m) => {
+                    let x = m.touches[0].clientX;
+                    let y = m.touches[0].clientY;
+                    last = [x, y]
+                }
+                canvas.ontouchmove = (m) => {
+                    let x = m.touches[0].clientX;
+                    let y = m.touches[0].clientY;
+                    //上面获取到了x和y的坐标值，并且赋值到了变量x和y身上
+                    //下面就可以画出这个点了
+                    drawLine(last[0], last[1], x, y)
+                    last = [x, y]
+                }
+            } else {
+                canvas.onmousedown = (e) => {
+                    painting = true;
+                    last = [e.clientX, e.clientY]
+                }
+                canvas.onmousemove = (e) => {
+                    if (painting === true) {
+                        drawLine(last[0], last[1], e.clientX, e.clientY)
+                        last = [e.clientX, e.clientY]
+                    } else {
+                    }
+                }
+                canvas.onmouseup = () => {
+                    painting = false
+                }
+            }
+        </script>
+    </body>
+</html>
