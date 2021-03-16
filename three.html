@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Canvas画线</title>
+        <link rel="stylesheet" href="two.css">
+    </head>
+    <body>
+        <canvas id="canvas" width="100" height="100"></canvas>
+        <script>
+            let canvas = document.getElementById("canvas");  //先定义和获取canvas
+            canvas.width = document.documentElement.clientWidth;  //canvas的宽等于屏幕宽
+            canvas.height = document.documentElement.clientHeight; //canvas的高等于屏幕高
+
+            let ctx = canvas.getContext("2d");
+            ctx.fillStyle = "red";   //canvas的颜色样式
+            let painting = false;    //定义pc上鼠标的变量
+
+            let isTouchDevice = 'ontouchstart' in document.documentElement;
+            if (isTouchDevice) {
+                canvas.ontouchmove = (m) => {
+                    let x = m.touches[0].clientX;
+                    let y = m.touches[0].clientY;
+                    //上面获取到了x和y的坐标值，并且赋值到了变量x和y身上
+                    //下面就可以画出这个点了
+                    ctx.beginPath();
+                    ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            } else {
+                canvas.onmousedown = () => {
+                    painting = true
+                }
+                canvas.onmousemove = (e) => {
+                    if (painting === true) {
+                        ctx.beginPath();
+                        ctx.arc(e.clientX, e.clientY, 6, 0, 2 * Math.PI);
+                        ctx.fill();
+                    } else {
+                    }
+                }
+                canvas.onmouseup = () => {
+                    painting = false
+                }
+            }
+        </script>
+    </body>
+</html>
